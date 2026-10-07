@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Eine kleine Frage 💌</title>
+<meta property="og:title" content="Ich habe eine Frage an dich... ✨">
+<meta property="og:description" content="Öffne den Link, wenn du Zeit hast 💌">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Manrope:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--a:#ee7a6e;--b:#f2a06b;--ink:#fff;--card:rgba(255,255,255,.18);--btn:#fff;--btnt:#d9534f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--a:#c95b52;--b:#d98550}}
+:root[data-theme="dark"]{--a:#c95b52;--b:#d98550}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:linear-gradient(160deg,var(--a),var(--b));color:var(--ink);font-family:Manrope,system-ui,sans-serif;overflow:hidden}
+.scr{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:18px}
+.scr.on{display:flex;animation:in .45s ease}
+@keyframes in{from{opacity:0;transform:scale(.97)}}
+.em{font-size:84px;line-height:1}
+h1{font-family:Unbounded,system-ui,sans-serif;font-weight:700;font-size:clamp(24px,7vw,34px);line-height:1.25;margin:0;max-width:420px}
+p{margin:0;font-size:17px;opacity:.92;max-width:360px}
+button,input{font:inherit}
+.btn{background:var(--btn);color:var(--btnt);border:0;border-radius:999px;padding:15px 30px;font-weight:600;font-size:17px;cursor:pointer}
+.btn:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.btn.ghost{background:rgba(255,255,255,.28);color:var(--ink)}
+.row{display:flex;gap:14px;align-items:center;justify-content:center;min-height:56px}
+#no{position:relative}
+input{background:var(--card);border:1px solid rgba(255,255,255,.45);color:var(--ink);border-radius:16px;padding:14px 16px;width:min(300px,100%);color-scheme:light}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(340px,100%)}
+.act{background:var(--card);border:2px solid transparent;border-radius:20px;padding:18px 8px;color:var(--ink);cursor:pointer;font-weight:600}
+.act span{display:block;font-size:40px;margin-bottom:6px}
+.act:hover,.act:focus-visible{border-color:#fff;outline:0}
+.h{position:fixed;pointer-events:none;font-size:28px;animation:fly 1.4s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--x),var(--y)) scale(1.4);opacity:0}}
+@media (prefers-reduced-motion:reduce){.scr.on{animation:none}.h{animation-duration:.01s}}
+</style>
+</head>
+<body>
+<section class="scr on" id="s1">
+  <div class="em">💌</div>
+  <h1>Gehst du mit mir auf ein Date?</h1>
+  <div class="row"><button class="btn" id="yes">Ja! 😍</button><button class="btn ghost" id="no">Nein</button></div>
+</section>
+<section class="scr" id="s2">
+  <div class="em">🥹</div>
+  <h1>Warte, hast du wirklich „Ja“ gesagt?</h1>
+  <p>Ich war so nervös 😄</p>
+  <button class="btn" id="yes2">Ja, ja, JA!</button>
+</section>
+<section class="scr" id="s3">
+  <div class="em">🗓️</div>
+  <h1>Wann passt es dir?</h1>
+  <input type="date" id="d" aria-label="Datum">
+  <input type="time" id="t" aria-label="Uhrzeit">
+  <button class="btn" id="ok3">Bestätigen 💫</button>
+</section>
+<section class="scr" id="s4">
+  <h1>Was wollen wir machen?</h1>
+  <p>Wähle aus, worauf du Lust hast</p>
+  <div class="grid" id="acts">
+    <button class="act"><span>🍕</span>Pizza</button>
+    <button class="act"><span>🎬</span>Kino</button>
+    <button class="act"><span>🌳</span>Spaziergang</button>
+    <button class="act"><span>☕</span>Kaffee</button>
+  </div>
+</section>
+<section class="scr" id="s5">
+  <div class="em">🎉</div>
+  <h1>Juhu! Das ist ein Date 💛</h1>
+  <p id="fin"></p>
+</section>
+<script>
+const $=id=>document.getElementById(id);
+function go(n){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$('s'+n).classList.add('on')}
+function burst(){for(let i=0;i<24;i++){const e=document.createElement('div');e.className='h';e.textContent=['❤️','💖','💗','🌸'][i%4];e.style.left='50%';e.style.top='55%';e.style.setProperty('--x',(Math.random()*600-300)+'px');e.style.setProperty('--y',(Math.random()*-600-50)+'px');document.body.appendChild(e);setTimeout(()=>e.remove(),1500)}}
+const no=$('no');
+function run(){const m=60,w=innerWidth-no.offsetWidth-m,h=innerHeight-no.offsetHeight-m;no.style.position='fixed';no.style.left=(m/2+Math.random()*w)+'px';no.style.top=(m/2+Math.random()*h)+'px'}
+['pointerenter','pointerdown','touchstart'].forEach(ev=>no.addEventListener(ev,e=>{e.preventDefault();run()},{passive:false}));
+$('yes').onclick=()=>{burst();setTimeout(()=>go(2),900)};
+$('yes2').onclick=()=>go(3);
+let when='';
+$('ok3').onclick=()=>{
+  if(!$('d').value||!$('t').value){alert('Bitte wähle ein Datum und eine Uhrzeit');return}
+  const dt=new Date($('d').value+'T00:00');
+  when=dt.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})+' um '+$('t').value+' Uhr';
+  go(4)};
+document.querySelectorAll('.act').forEach(b=>b.onclick=()=>{
+  const name=b.textContent.trim();
+  $('fin').textContent='Ich freue mich auf dich: '+when+'. Unser Plan: '+name+' 💫';
+  go(5);burst()});
+</script>
+</body>
+</html>
