@@ -78,6 +78,8 @@ input::placeholder{color:rgba(255,255,255,.7)}
   <p id="fin"></p>
 </section>
 <script>
+const FORMSPREE_URL = 'https://formspree.io/f/mgaoalal'; 
+
 const $=id=>document.getElementById(id);
 function go(n){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$('s'+n).classList.add('on')}
 function burst(){for(let i=0;i<24;i++){const e=document.createElement('div');e.className='h';e.textContent=['❤️','💖','💗','🌸'][i%4];e.style.left='50%';e.style.top='55%';e.style.setProperty('--x',(Math.random()*600-300)+'px');e.style.setProperty('--y',(Math.random()*-600-50)+'px');document.body.appendChild(e);setTimeout(()=>e.remove(),1500)}}
@@ -93,8 +95,26 @@ $('ok3').onclick=()=>{
   when=dt.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})+' um '+$('t').value+' Uhr';
   go(4)};
 
+function sendNotification(dateStr, ideaStr){
+  if(FORMSPREE_URL){
+    fetch(FORMSPREE_URL, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        answer: 'Она сказала ДА!',
+        when: dateStr,
+        idea: ideaStr
+      })
+    }).catch(e => console.log(e));
+  }
+}
+
 function finish(idea){
   $('fin').textContent='Ich freue mich auf dich: '+when+'. Unser Plan: '+idea+' 💫';
+  sendNotification(when, idea);
   go(5);burst();
 }
 
