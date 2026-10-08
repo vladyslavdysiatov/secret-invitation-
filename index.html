@@ -27,10 +27,14 @@ button,input{font:inherit}
 .row{display:flex;gap:14px;align-items:center;justify-content:center;min-height:56px}
 #no{position:relative}
 input{background:var(--card);border:1px solid rgba(255,255,255,.45);color:var(--ink);border-radius:16px;padding:14px 16px;width:min(300px,100%);color-scheme:light}
+input::placeholder{color:rgba(255,255,255,.7)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(340px,100%)}
 .act{background:var(--card);border:2px solid transparent;border-radius:20px;padding:18px 8px;color:var(--ink);cursor:pointer;font-weight:600}
 .act span{display:block;font-size:40px;margin-bottom:6px}
 .act:hover,.act:focus-visible{border-color:#fff;outline:0}
+.act.full{grid-column:1/-1}
+.custom-box{display:none;flex-direction:column;align-items:center;gap:10px;width:100%}
+.custom-box.on{display:flex}
 .h{position:fixed;pointer-events:none;font-size:28px;animation:fly 1.4s ease-out forwards}
 @keyframes fly{to{transform:translate(var(--x),var(--y)) scale(1.4);opacity:0}}
 @media (prefers-reduced-motion:reduce){.scr.on{animation:none}.h{animation-duration:.01s}}
@@ -57,12 +61,15 @@ input{background:var(--card);border:1px solid rgba(255,255,255,.45);color:var(--
 </section>
 <section class="scr" id="s4">
   <h1>Was wollen wir machen?</h1>
-  <p>Wähle aus, worauf du Lust hast</p>
+  <p>Wähle aus oder schreib deine eigene Idee</p>
   <div class="grid" id="acts">
-    <button class="act"><span>🍕</span>Pizza</button>
-    <button class="act"><span>🎬</span>Kino</button>
-    <button class="act"><span>🌳</span>Spaziergang</button>
-    <button class="act"><span>☕</span>Kaffee</button>
+    <button class="act" data-val="Spaziergang"><span>🌳</span>Spaziergang</button>
+    <button class="act" data-val="Überraschung"><span>✨</span>Überraschung</button>
+    <button class="act full" id="customBtn"><span>💬</span>Du entscheidest! (Eigene Idee)</button>
+  </div>
+  <div class="custom-box" id="customBox">
+    <input type="text" id="customInput" placeholder="Worauf hast du Lust? ✨">
+    <button class="btn" id="customOk">Weiter 💫</button>
   </div>
 </section>
 <section class="scr" id="s5">
@@ -85,10 +92,26 @@ $('ok3').onclick=()=>{
   const dt=new Date($('d').value+'T00:00');
   when=dt.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})+' um '+$('t').value+' Uhr';
   go(4)};
-document.querySelectorAll('.act').forEach(b=>b.onclick=()=>{
-  const name=b.textContent.trim();
-  $('fin').textContent='Ich freue mich auf dich: '+when+'. Unser Plan: '+name+' 💫';
-  go(5);burst()});
+
+function finish(idea){
+  $('fin').textContent='Ich freue mich auf dich: '+when+'. Unser Plan: '+idea+' 💫';
+  go(5);burst();
+}
+
+document.querySelectorAll('.act[data-val]').forEach(b=>b.onclick=()=>{
+  finish(b.getAttribute('data-val'));
+});
+
+$('customBtn').onclick=()=>{
+  $('acts').style.display='none';
+  $('customBox').classList.add('on');
+};
+
+$('customOk').onclick=()=>{
+  const val=$('customInput').value.trim();
+  if(!val){alert('Bitte schreib deine Idee ✨');return}
+  finish(val);
+};
 </script>
 </body>
 </html>
